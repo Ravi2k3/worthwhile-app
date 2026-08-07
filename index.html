@@ -623,7 +623,10 @@ h2 {
   /* The cents carry less weight than the dollars, smaller and lifted to the
      top so they read as a superscript rather than an equal part of the price */
   font-size: 0.5em;
-  vertical-align: 0.85em;
+  /* The cents cap-top meets the dollar cap-top. Measured by rasterising both
+     glyphs: the 7 ink-top sits 11px above where the cents ink-top lands
+     unshifted, and 11px is 0.69 of the cents' own 16px size. */
+  vertical-align: 0.69em;
 }
 .plan .price .per {
   font-size: 0.95rem;
@@ -887,12 +890,13 @@ footer a:hover { color: var(--on-surface); }
         <p class="name">Pro <span class="tag">Once, forever</span></p>
         <p class="price"><span class="sym">$</span>7<span class="cents">.99</span> <span class="per">one payment</span></p>
         <ul>
-          <li>Your real hourly rate, after tax, what work costs you and the hours it takes without paying you</li>
-          <li>Prices measured against what is actually left after rent and bills</li>
-          <li>Unlimited waits and an unlimited wishlist</li>
-          <li>Totals for this year and all time</li>
-          <li>Backup into your own Google Drive, into a folder only this app can see</li>
-          <li>Three home screen widgets</li>
+          <li>Unlimited waits and an unlimited wishlist, instead of two and ten</li>
+          <li>Totals for this year and all time, not just this month</li>
+          <li>Your real hourly rate, after tax, work costs and unpaid hours</li>
+          <li>Discretionary mode, measured against what is left after rent and bills</li>
+          <li>Backed up to your own Google Drive, every change, into a folder only this app can see</li>
+          <li>Three home screen widgets, what you kept, what is waiting and the total</li>
+          <li>A share card for everything you have kept, all of it as one picture</li>
         </ul>
       </div>
     </div>
