@@ -1,0 +1,1217 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Worthwhile, prices in hours of your life</title>
+<meta name="description" content="See what things cost in hours of your life, then wait before you buy.">
+<meta property="og:title" content="Worthwhile">
+<meta property="og:description" content="See what things cost in hours of your life, then wait before you buy.">
+<meta property="og:image" content="https://ecstra.github.io/worthwhile-app/assets/play-feature.png">
+<meta property="og:url" content="https://ecstra.github.io/worthwhile-app/">
+<link rel="canonical" href="https://ecstra.github.io/worthwhile-app/">
+<meta name="theme-color" content="#0E0E10">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23BCF25C'/%3E%3Cpath d='M22 14h20c1.6 0 3 1.4 3 3 0 7.6-4.4 11.9-8.1 15l-.1.1.1.1c3.7 3.1 8.1 7.4 8.1 15 0 1.6-1.4 3-3 3H22c-1.6 0-3-1.4-3-3 0-7.6 4.4-11.9 8.1-15l.1-.1-.1-.1C23.4 28.9 19 24.6 19 17c0-1.6 1.4-3 3-3Z' fill='%231B2600'/%3E%3C/svg%3E">
+<style>
+/* ---------- Fonts ---------- */
+@font-face {
+  font-family: 'GoogleSansFlex';
+  src: url('assets/fonts/GoogleSansFlex-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'GoogleSansFlex';
+  src: url('assets/fonts/GoogleSansFlex-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'GoogleSansFlex';
+  src: url('assets/fonts/GoogleSansFlex-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Audiowide';
+  src: url('assets/fonts/Audiowide.ttf') format('truetype');
+  font-weight: 400;
+  font-display: swap;
+}
+
+/* ---------- Tokens, straight from lib/ui/theme.dart ---------- */
+:root {
+  --surface: #0E0E10;
+  --on-surface: #E9E9EE;
+  --on-surface-variant: #A8A8B0;
+  --surface-container-lowest: #08080A;
+  --surface-container-low: #161619;
+  --surface-container: #1C1C20;
+  --surface-container-high: #26262B;
+  --surface-container-highest: #313138;
+  --outline: #57575F;
+  --outline-variant: #2B2B31;
+
+  --primary: #BCF25C;          /* lime: money kept */
+  --on-primary: #1B2600;
+  --primary-container: #33470A;
+  --on-primary-container: #D8FF8E;
+  --secondary: #C9BDFF;        /* violet: parked wants */
+  --on-secondary: #2A1C57;
+  --tertiary: #FFB4A0;         /* coral: a decision come due */
+  --on-tertiary: #5C1A08;
+  --amber: #EAC270;            /* on the clock */
+
+  /* Corner scale: tile 16, card 20, hero 32, square 6, pill full */
+  --r-tile: 16px;
+  --r-card: 20px;
+  --r-hero: 32px;
+  --r-square: 6px;
+
+  /* M3 Expressive motion, the official web conversions of the springs */
+  --spatial: cubic-bezier(0.38, 1.21, 0.22, 1.00);       /* default, 500ms */
+  --spatial-fast: cubic-bezier(0.42, 1.67, 0.21, 0.90);  /* fast, 350ms */
+  --effects: cubic-bezier(0.34, 0.80, 0.34, 1.00);       /* default, 200ms */
+  --effects-slow: cubic-bezier(0.34, 0.88, 0.34, 1.00);  /* slow, 300ms */
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  color-scheme: dark;
+  /* The page scrollbar stays out of the picture */
+  scrollbar-width: none;
+}
+::-webkit-scrollbar { width: 0; height: 0; background: transparent; }
+
+body {
+  background: var(--surface);
+  color: var(--on-surface);
+  font-family: 'GoogleSansFlex', system-ui, sans-serif;
+  font-weight: 400;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+::selection { background: var(--primary); color: var(--on-primary); }
+
+img { max-width: 100%; display: block; }
+
+.wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ---------- Reveal on scroll: spatial for travel, effects for opacity ---------- */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(26px);
+  transition:
+    transform 500ms var(--spatial),
+    opacity 300ms var(--effects-slow);
+  transition-delay: var(--d, 0ms);
+}
+[data-reveal].in {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---------- Header ---------- */
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 28px 0;
+}
+.lockup {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-weight: 500;
+  font-size: 1.25rem;
+  letter-spacing: 0.01em;
+}
+.lockup svg { width: 40px; height: 40px; }
+.coming {
+  border: 1px solid var(--outline-variant);
+  color: var(--on-surface-variant);
+  border-radius: 999px;
+  padding: 9px 18px;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+/* ---------- Hero ---------- */
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: 56px;
+  align-items: center;
+  padding: 64px 0 96px;
+  position: relative;
+}
+.eyebrow {
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--on-surface-variant);
+  margin-bottom: 20px;
+}
+h1 {
+  font-size: clamp(2.6rem, 5.4vw, 4.1rem);
+  font-weight: 500;
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+}
+h1 .lime { color: var(--primary); }
+.hero .sub {
+  margin-top: 24px;
+  font-size: 1.15rem;
+  font-weight: 300;
+  color: var(--on-surface-variant);
+  max-width: 34ch;
+}
+.hero-mark {
+  width: 72px;
+  height: 72px;
+  margin-bottom: 32px;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hero-mark {
+    animation: settle 700ms var(--spatial-fast) both;
+  }
+}
+@keyframes settle {
+  from { transform: rotate(-45deg) scale(0.72); }
+  to   { transform: none; }
+}
+
+/* The one decorative library shape, quiet and behind everything */
+.backdrop-scallop {
+  position: absolute;
+  right: -180px;
+  top: -90px;
+  width: 560px;
+  height: 560px;
+  z-index: -1;
+  opacity: 0.5;
+}
+.backdrop-scallop path {
+  fill: none;
+  stroke: var(--surface-container-high);
+  stroke-width: 1.5;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .backdrop-scallop { animation: drift 90s linear infinite; }
+}
+@keyframes drift { to { transform: rotate(45deg); } }
+
+/* ---------- Converter card ---------- */
+.converter {
+  background: var(--surface-container-low);
+  border-radius: var(--r-hero);
+  padding: 28px;
+}
+.field-label {
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--on-surface-variant);
+  margin-bottom: 8px;
+}
+.field {
+  display: flex;
+  align-items: center;
+  background: var(--surface-container);
+  border-radius: var(--r-tile);
+  padding: 4px 6px 4px 16px;
+  margin-bottom: 18px;
+  border: 1px solid transparent;
+  transition: border-color 200ms var(--effects);
+}
+.field:focus-within { border-color: var(--primary); }
+.field .sym {
+  color: var(--on-surface-variant);
+  font-size: 1.1rem;
+  margin-right: 8px;
+}
+.field input {
+  flex: 1;
+  /* width 0, not only min-width: Chrome feeds a text input's intrinsic width
+     into the column's min-content otherwise, and the hero overflows on phones */
+  width: 0;
+  min-width: 0;
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--on-surface);
+  font: 500 1.35rem 'GoogleSansFlex', sans-serif;
+  padding: 12px 0;
+}
+.field input::placeholder { color: var(--outline); font-weight: 400; }
+.field select {
+  background: var(--surface-container-highest);
+  color: var(--on-surface);
+  border: none;
+  outline: none;
+  border-radius: 999px;
+  padding: 8px 12px;
+  font: 500 0.9rem 'GoogleSansFlex', sans-serif;
+  cursor: pointer;
+}
+
+.answer-zone {
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 10px 2px 14px;
+}
+.answer {
+  color: var(--primary);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+  transform-origin: left center;
+}
+.answer.pop {
+  animation: pop 350ms var(--spatial-fast);
+}
+@keyframes pop {
+  from { transform: scale(0.94); }
+  to   { transform: none; }
+}
+.answer-suffix {
+  color: var(--on-surface-variant);
+  font-weight: 300;
+  font-size: 1.05rem;
+  margin-top: 6px;
+}
+.answer-idle {
+  color: var(--outline);
+  font-weight: 300;
+  font-size: 1.05rem;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+.chip {
+  font: 400 0.9rem 'GoogleSansFlex', sans-serif;
+  color: var(--on-surface);
+  background: var(--surface-container-high);
+  border: none;
+  /* Half the chip's height, so it paints as a pill. Not 999: the spatial
+     curve overshoots its target, and a morph specified from 999 dives past
+     zero on the way to the tile, which flashed every chip square once */
+  border-radius: 20px;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition:
+    border-radius 500ms var(--spatial),
+    background-color 200ms var(--effects),
+    color 200ms var(--effects);
+}
+.chip:hover { background: var(--surface-container-highest); }
+.chip.active {
+  background: var(--primary);
+  color: var(--on-primary);
+  font-weight: 500;
+  border-radius: 12px; /* the chip morph: pill tightens to a tile when chosen */
+}
+.fineprint {
+  font-size: 0.8rem;
+  font-weight: 300;
+  color: var(--on-surface-variant);
+}
+
+/* ---------- Section scaffolding ---------- */
+section { padding: 56px 0; }
+.section-label {
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--on-surface-variant);
+  margin-bottom: 16px;
+}
+h2 {
+  font-size: clamp(1.8rem, 3.6vw, 2.6rem);
+  font-weight: 500;
+  line-height: 1.12;
+  letter-spacing: -0.015em;
+  max-width: 24ch;
+}
+.section-sub {
+  margin-top: 14px;
+  color: var(--on-surface-variant);
+  font-weight: 300;
+  max-width: 52ch;
+}
+
+/* ---------- Steps: a connected group, round outside, tight in the middle ---------- */
+.steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3px;
+  margin-top: 40px;
+}
+.step {
+  background: var(--surface-container-low);
+  padding: 28px 26px 30px;
+  border-radius: var(--r-square);
+}
+.step:first-child { border-radius: var(--r-hero) var(--r-square) var(--r-square) var(--r-hero); }
+.step:last-child  { border-radius: var(--r-square) var(--r-hero) var(--r-hero) var(--r-square); }
+.step .n {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  font-weight: 500;
+  margin-bottom: 18px;
+}
+.step:nth-child(1) .n { background: var(--primary); color: var(--on-primary); }
+.step:nth-child(2) .n { background: var(--amber); color: #3A2B00; }
+.step:nth-child(3) .n { background: var(--tertiary); color: var(--on-tertiary); }
+.step h3 { font-size: 1.2rem; font-weight: 500; margin-bottom: 8px; }
+.step p { color: var(--on-surface-variant); font-weight: 300; font-size: 0.95rem; }
+
+/* ---------- Gallery carousel: a full bleed horizon, snapping to centre ---------- */
+.carousel-frame {
+  --shot-w: clamp(248px, 24vw, 340px);
+  --shot-gap: 24px;
+  position: relative;
+  /* Breaks out of the column. A carousel is a horizon, not a strip in a box */
+  width: 100vw;
+  margin: 44px 0 0 calc(50% - 50vw);
+}
+.gallery {
+  display: flex;
+  gap: var(--shot-gap);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  /* Any shot can reach the centre, the first and last included */
+  padding: 8px calc(50vw - var(--shot-w) / 2) 4px;
+  scrollbar-width: none;
+  /* The strip dissolves at the edges rather than being cut by them */
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
+}
+.gallery::-webkit-scrollbar { display: none; }
+.shot {
+  /* A fixed width, not only a flex basis: the item's minimum stays auto
+     otherwise and the 1080px PNG inside can push the row wide open */
+  flex: 0 0 auto;
+  width: var(--shot-w);
+  min-width: 0;
+  scroll-snap-align: center;
+}
+.shot img {
+  width: 100%;
+  height: auto;
+  border-radius: 24px;
+  border: 1px solid var(--outline-variant);
+}
+.shot figcaption {
+  margin-top: 16px;
+  text-align: center;
+  font-size: 0.95rem;
+  color: var(--on-surface-variant);
+}
+.car-arrow {
+  position: absolute;
+  /* Centred on the picture rather than on picture plus caption */
+  top: calc(50% - 22px);
+  transform: translateY(-50%);
+  z-index: 2;
+  width: 52px;
+  height: 52px;
+  border: 1px solid var(--outline-variant);
+  /* Half the button, which is a circle. Not 999: an overshooting morph
+     specified from 999 dives past zero and flashes the corner square */
+  border-radius: 26px;
+  background: var(--surface-container-high);
+  color: var(--on-surface);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition:
+    border-radius 500ms var(--spatial),
+    background-color 200ms var(--effects),
+    opacity 200ms var(--effects);
+}
+.car-arrow:hover {
+  background: var(--surface-container-highest);
+  border-radius: 16px; /* the same pill to tile morph the chips do */
+}
+.car-arrow[disabled] {
+  opacity: 0;
+  pointer-events: none;
+}
+/* No stock blue ring lingering after a click. Keyboard focus rings in lime */
+.car-arrow:focus:not(:focus-visible) { outline: none; }
+.car-arrow:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+.car-arrow.prev { left: max(24px, 4vw); }
+.car-arrow.next { right: max(24px, 4vw); }
+.car-arrow svg { width: 22px; height: 22px; }
+
+/* ---------- Savings block: the app's one display voice ---------- */
+.savings {
+  background: var(--primary);
+  color: var(--on-primary);
+  border-radius: var(--r-hero);
+  padding: clamp(32px, 6vw, 64px);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 40px;
+  align-items: end;
+}
+.savings .caption {
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.7;
+  margin-bottom: 10px;
+}
+.savings .figure {
+  font-family: 'Audiowide', 'GoogleSansFlex', sans-serif;
+  font-size: clamp(2.6rem, 7vw, 4.6rem);
+  line-height: 1;
+  letter-spacing: 0.01em;
+}
+.savings .figure .sym {
+  font-family: 'GoogleSansFlex', sans-serif;
+  font-size: 0.5em;
+  vertical-align: 0.5em;
+  opacity: 0.65;
+  margin-right: 0.08em;
+}
+.savings .line {
+  margin-top: 18px;
+  font-weight: 400;
+  max-width: 40ch;
+}
+.savings .stats {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.savings .stat {
+  background: rgba(27, 38, 0, 0.12);
+  border-radius: 999px;
+  padding: 10px 20px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* ---------- Features ---------- */
+.features {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 40px;
+}
+.feature {
+  background: var(--surface-container-low);
+  border-radius: var(--r-card);
+  padding: 26px 24px 28px;
+}
+.feature svg {
+  width: 26px;
+  height: 26px;
+  margin-bottom: 16px;
+}
+.feature h3 { font-size: 1.05rem; font-weight: 500; margin-bottom: 8px; }
+.feature p { color: var(--on-surface-variant); font-weight: 300; font-size: 0.92rem; }
+
+/* ---------- Pro ---------- */
+.plans {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3px;
+  margin-top: 40px;
+}
+.plan { padding: 32px 30px 36px; background: var(--surface-container-low); }
+.plan.free { border-radius: var(--r-hero) var(--r-square) var(--r-square) var(--r-hero); }
+.plan.pro {
+  border-radius: var(--r-square) var(--r-hero) var(--r-hero) var(--r-square);
+  background: var(--surface-container);
+  border: 1px solid var(--primary-container);
+}
+.plan .name { font-size: 1.3rem; font-weight: 500; }
+.plan .tag {
+  display: inline-block;
+  margin-left: 10px;
+  background: var(--primary);
+  color: var(--on-primary);
+  font-size: 0.75rem;
+  font-weight: 500;
+  border-radius: 999px;
+  padding: 4px 12px;
+  vertical-align: 3px;
+}
+.plan .price {
+  margin: 14px 0 22px;
+  font-size: 2rem;
+  font-weight: 500;
+  color: var(--primary);
+}
+.plan.free .price { color: var(--on-surface); }
+.plan .price .sym {
+  font-size: 0.55em;
+  vertical-align: 0.45em;
+  color: var(--on-surface-variant);
+  margin-right: 0.06em;
+}
+.plan .price .per {
+  font-size: 0.95rem;
+  font-weight: 300;
+  color: var(--on-surface-variant);
+  margin-left: 8px;
+}
+.plan ul { list-style: none; }
+.plan li {
+  padding: 9px 0 9px 30px;
+  position: relative;
+  color: var(--on-surface-variant);
+  font-weight: 300;
+  font-size: 0.95rem;
+  border-bottom: 1px solid var(--outline-variant);
+}
+.plan li:last-child { border-bottom: none; }
+.plan li::before {
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: 16px;
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--outline);
+}
+.plan.pro li::before { background: var(--primary); }
+.plan.pro li { color: var(--on-surface); }
+
+/* ---------- Privacy band ---------- */
+.privacy {
+  background: var(--surface-container-lowest);
+  border-radius: var(--r-hero);
+  padding: clamp(36px, 6vw, 64px);
+  text-align: center;
+}
+.privacy h2 { margin: 0 auto; }
+.privacy p {
+  margin: 18px auto 0;
+  color: var(--on-surface-variant);
+  font-weight: 300;
+  max-width: 52ch;
+}
+
+/* ---------- Footer ---------- */
+footer {
+  padding: 56px 0 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+  color: var(--on-surface-variant);
+  font-size: 0.85rem;
+  font-weight: 300;
+}
+footer .lockup { font-size: 1.05rem; color: var(--on-surface); }
+footer .lockup svg { width: 30px; height: 30px; }
+footer a {
+  color: var(--on-surface-variant);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 200ms var(--effects);
+}
+footer a:hover { color: var(--on-surface); }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 860px) {
+  .hero { grid-template-columns: minmax(0, 1fr); gap: 44px; padding: 40px 0 64px; }
+  .hero .sub { max-width: none; }
+  .steps { grid-template-columns: 1fr; }
+  .step:first-child { border-radius: var(--r-hero) var(--r-hero) var(--r-square) var(--r-square); }
+  .step:last-child  { border-radius: var(--r-square) var(--r-square) var(--r-hero) var(--r-hero); }
+  .features { grid-template-columns: 1fr; }
+  .plans { grid-template-columns: 1fr; }
+  .plan.free { border-radius: var(--r-hero) var(--r-hero) var(--r-square) var(--r-square); }
+  .plan.pro  { border-radius: var(--r-square) var(--r-square) var(--r-hero) var(--r-hero); }
+  .savings { grid-template-columns: 1fr; align-items: start; }
+  .savings .stats { flex-direction: row; flex-wrap: wrap; }
+  .backdrop-scallop { display: none; }
+}
+
+@media (max-width: 640px) {
+  /* Fingers swipe; the arrows are for pointers */
+  .car-arrow { display: none; }
+}
+
+@media (max-width: 480px) {
+  .lockup { font-size: 1.05rem; gap: 10px; }
+  .lockup svg { width: 32px; height: 32px; }
+  .coming { font-size: 0.78rem; padding: 8px 14px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] { transition: none; opacity: 1; transform: none; }
+  .answer.pop { animation: none; }
+  html { scroll-behavior: auto; }
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div class="lockup">
+      <svg viewBox="0 0 96 96" aria-hidden="true"><path class="js-scallop" fill="#BCF25C"></path><path d="M38 26h20c1.7 0 3 1.3 3 3 0 7.9-4.6 12.4-8.4 15.6l-.2.2.2.2C56.4 48.2 61 52.7 61 60.6c0 1.7-1.3 3-3 3H38c-1.7 0-3-1.3-3-3 0-7.9 4.6-12.4 8.4-15.6l.2-.2-.2-.2C39.6 41.4 35 36.9 35 29c0-1.7 1.3-3 3-3Z" fill="#1B2600" transform="translate(1.5 3.2)"/></svg>
+      Worthwhile
+    </div>
+    <span class="coming">On Google Play</span>
+  </header>
+
+  <section class="hero">
+    <svg class="backdrop-scallop" viewBox="0 0 96 96" aria-hidden="true"><path class="js-scallop"></path></svg>
+
+    <div>
+      <svg class="hero-mark" viewBox="0 0 96 96" aria-hidden="true"><path class="js-scallop" fill="#BCF25C"></path><path d="M38 26h20c1.7 0 3 1.3 3 3 0 7.9-4.6 12.4-8.4 15.6l-.2.2.2.2C56.4 48.2 61 52.7 61 60.6c0 1.7-1.3 3-3 3H38c-1.7 0-3-1.3-3-3 0-7.9 4.6-12.4 8.4-15.6l.2-.2-.2-.2C39.6 41.4 35 36.9 35 29c0-1.7 1.3-3 3-3Z" fill="#1B2600" transform="translate(1.5 3.2)"/></svg>
+      <p class="eyebrow" data-reveal>Prices, in hours of your life</p>
+      <h1 data-reveal style="--d: 60ms">A price tells you what something costs. <span class="lime">Not what it costs&nbsp;you.</span></h1>
+      <p class="sub" data-reveal style="--d: 120ms">Worthwhile turns any price into the amount of your life you spend earning it. Then it makes you wait before you buy.</p>
+    </div>
+
+    <div class="converter" data-reveal style="--d: 180ms">
+      <p class="field-label">Something you want</p>
+      <div class="chips" id="chips"></div>
+
+      <p class="field-label">Its price</p>
+      <div class="field">
+        <span class="sym" id="price-sym">₹</span>
+        <input id="price" inputmode="decimal" autocomplete="off" spellcheck="false" placeholder="Type a price" aria-label="Price">
+        <select id="currency" aria-label="Currency">
+          <option value="INR" selected>INR</option>
+          <option value="USD">USD</option>
+          <option value="EUR">EUR</option>
+        </select>
+      </div>
+
+      <p class="field-label">What you earn a year</p>
+      <div class="field">
+        <span class="sym" id="salary-sym">₹</span>
+        <input id="salary" inputmode="decimal" autocomplete="off" spellcheck="false" aria-label="Yearly income">
+      </div>
+
+      <div class="answer-zone" aria-live="polite">
+        <div id="answer-main" class="answer"></div>
+        <div id="answer-suffix" class="answer-suffix"></div>
+      </div>
+
+      <p class="fineprint">Against an eight hour day, five days a week. The app lets you tune all of it, down to your true rate after tax.</p>
+    </div>
+  </section>
+
+  <section>
+    <p class="section-label" data-reveal>The cooldown</p>
+    <h2 data-reveal style="--d: 60ms">A price in hours is a party trick. A timer that comes back and asks again is a habit.</h2>
+    <div class="steps">
+      <div class="step" data-reveal>
+        <span class="n">1</span>
+        <h3>See it in work time</h3>
+        <p>Type an amount and the answer appears. A coffee reads in minutes. A television reads in weeks. Checking costs nothing and asks for nothing.</p>
+      </div>
+      <div class="step" data-reveal style="--d: 80ms">
+        <span class="n">2</span>
+        <h3>Put it behind a wait</h3>
+        <p>Ten minutes to a month, or park it on the wishlist with no clock at all. The want survives the wait, the impulse usually does not.</p>
+      </div>
+      <div class="step" data-reveal style="--d: 160ms">
+        <span class="n">3</span>
+        <h3>Still want it?</h3>
+        <p>When the time is up, one question arrives. Buy it, give it longer, or drop it and keep the money and the hours it stood for.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <p class="section-label" data-reveal>On the phone</p>
+    <h2 data-reveal style="--d: 60ms">What saying no looks like.</h2>
+    <div class="carousel-frame" data-reveal>
+      <button class="car-arrow prev" id="car-prev" aria-label="Previous screen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 6 9 12l5.5 6"/></svg></button>
+      <div class="gallery" id="gallery">
+        <figure class="shot"><img src="assets/store/01-what-it-costs.png" alt="A price answered in weeks of work" width="1080" height="1920"><figcaption>Check a price</figcaption></figure>
+        <figure class="shot"><img src="assets/store/02-the-list.png" alt="Everything currently on a wait" width="1080" height="1920"><figcaption>The list</figcaption></figure>
+        <figure class="shot"><img src="assets/store/03-still-want-it.png" alt="The app asking whether you still want it" width="1080" height="1920"><figcaption>A decision comes due</figcaption></figure>
+        <figure class="shot"><img src="assets/store/04-what-you-kept.png" alt="A month of what was kept and what was spent" width="1080" height="1920"><figcaption>What you kept</figcaption></figure>
+        <figure class="shot"><img src="assets/store/05-a-year-in.png" alt="The home screen after a year of saying no" width="1080" height="1920"><figcaption>A year in</figcaption></figure>
+      </div>
+      <button class="car-arrow next" id="car-next" aria-label="Next screen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9.5 6 5.5 6-5.5 6"/></svg></button>
+    </div>
+  </section>
+
+  <section>
+    <div class="savings" data-reveal id="savings">
+      <div>
+        <p class="caption">Money not spent</p>
+        <p class="figure"><span class="sym">₹</span><span id="kept">0</span></p>
+        <p class="line">The only number in the app that grows while you do nothing. It is always right, and changing your mind about an old decision moves it straight away.</p>
+      </div>
+      <div class="stats">
+        <span class="stat" id="stat-decisions">47 decisions kept</span>
+        <span class="stat" id="stat-hours">493 hours of life not sold</span>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <p class="section-label" data-reveal>What else is in it</p>
+    <h2 data-reveal style="--d: 60ms">Everything else it gets right.</h2>
+    <div class="features">
+      <div class="feature" data-reveal>
+        <svg viewBox="0 0 24 24" fill="none" stroke="#BCF25C" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>
+        <h3>Checking costs nothing</h3>
+        <p>Type a price, read the answer, walk away. Naming it and choosing a wait only appear if you decide to keep it.</p>
+      </div>
+      <div class="feature" data-reveal style="--d: 60ms">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#E9E9EE" stroke-width="1.8" stroke-linecap="round"><path d="M4 6h16M4 12h10M4 18h13"/><path d="M18.5 10.5 21 13l-2.5 2.5" fill="none"/></svg>
+        <h3>38 currencies, each its own way</h3>
+        <p>Digits group the way your own region groups them, so fifteen lakh comes out as 15,00,000 and reads at a glance.</p>
+      </div>
+      <div class="feature" data-reveal style="--d: 120ms">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#FFB4A0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-2 8-2 8h16s-2-1-2-8"/><path d="M10 21a2 2 0 0 0 4 0"/></svg>
+        <h3>Reminders that arrive on time</h3>
+        <p>The question arrives at the moment you picked. And when your phone is going to hold it back, the app warns you first, so a late reminder is never a surprise.</p>
+      </div>
+      <div class="feature" data-reveal>
+        <svg viewBox="0 0 24 24" fill="none" stroke="#E9E9EE" stroke-width="1.8" stroke-linecap="round"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M4 10h16M9 5V3M15 5V3"/></svg>
+        <h3>History, both halves</h3>
+        <p>Kept and spent side by side, grouped by day, month or year, searchable. Your own decisions are yours to look at.</p>
+      </div>
+      <div class="feature" data-reveal style="--d: 60ms">
+        <svg viewBox="0 0 24 24" fill="#E9E9EE"><circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/><path d="m7.8 10.9 8.4-4.8m-8.4 7 8.4 4.8" stroke="#E9E9EE" stroke-width="1.8"/></svg>
+        <h3>Share the decision</h3>
+        <p>A dropped item becomes a picture. Two weeks of my life, skipped. Sized for stories or for anywhere else.</p>
+      </div>
+      <div class="feature" data-reveal style="--d: 120ms">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#C9BDFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h12a1 1 0 0 1 1 1v16l-7-4-7 4V5a1 1 0 0 1 1-1Z"/></svg>
+        <h3>A wishlist with no clock</h3>
+        <p>Not everything needs a deadline. Swipe a row right to keep something for later, left to let it go, both with a way back.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <p class="section-label" data-reveal>Free and Pro</p>
+    <h2 data-reveal style="--d: 60ms">Free to use. Pro is one payment, once.</h2>
+    <p class="section-sub" data-reveal style="--d: 120ms">There is no subscription and the app never asks again.</p>
+    <div class="plans">
+      <div class="plan free" data-reveal>
+        <p class="name">Free</p>
+        <p class="price">₹0</p>
+        <ul>
+          <li>Unlimited price checks, using your yearly pay</li>
+          <li>Two waits at a time, ten wants on the list</li>
+          <li>This month's total of money not spent</li>
+          <li>The share card</li>
+        </ul>
+      </div>
+      <div class="plan pro" data-reveal style="--d: 80ms">
+        <p class="name">Pro <span class="tag">Once, forever</span></p>
+        <p class="price"><span class="sym">₹</span>349 <span class="per">one payment</span></p>
+        <ul>
+          <li>Your real hourly rate, after tax, what work costs you and the hours it takes without paying you</li>
+          <li>Prices measured against what is actually left after rent and bills</li>
+          <li>Unlimited waits and an unlimited wishlist</li>
+          <li>Totals for this year and all time</li>
+          <li>Backup into your own Google Drive, into a folder only this app can see</li>
+          <li>Three home screen widgets</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="privacy" data-reveal>
+      <h2>No adverts, ever. No server, anywhere.</h2>
+      <p>An app about resisting a purchase cannot carry a banner telling you to make one. Your decisions stay on your device, and if you turn backup on, one file goes into your own Drive where no other app and no website can read it. There is no server of ours holding any of it.</p>
+    </div>
+  </section>
+
+  <footer>
+    <div class="lockup">
+      <svg viewBox="0 0 96 96" aria-hidden="true"><path class="js-scallop" fill="#BCF25C"></path><path d="M38 26h20c1.7 0 3 1.3 3 3 0 7.9-4.6 12.4-8.4 15.6l-.2.2.2.2C56.4 48.2 61 52.7 61 60.6c0 1.7-1.3 3-3 3H38c-1.7 0-3-1.3-3-3 0-7.9 4.6-12.4 8.4-15.6l.2-.2-.2-.2C39.6 41.4 35 36.9 35 29c0-1.7 1.3-3 3-3Z" fill="#1B2600" transform="translate(1.5 3.2)"/></svg>
+      Worthwhile
+    </div>
+    <span>On Google Play</span>
+    <a href="privacy">Privacy policy</a>
+    <span>Dark, and only dark. Android, and only Android.</span>
+  </footer>
+</div>
+
+<script>
+'use strict';
+
+/* ---------- The scallop, the same curve the app draws ---------- */
+function scallopPath(cx, cy, r, lobes, amplitude) {
+  const points = [];
+  const steps = 720;
+
+  for (let i = 0; i <= steps; i++) {
+    const theta = (i / steps) * Math.PI * 2;
+    const radius = r * (1 + amplitude * Math.cos(lobes * theta));
+    const x = cx + radius * Math.cos(theta);
+    const y = cy + radius * Math.sin(theta);
+    points.push(`${x.toFixed(2)} ${y.toFixed(2)}`);
+  }
+
+  return `M${points.join('L')}Z`;
+}
+
+const scallop = scallopPath(48, 48, 42, 8, 0.07);
+document.querySelectorAll('.js-scallop').forEach((path) => {
+  path.setAttribute('d', scallop);
+});
+
+/* ---------- Currencies. Grouping comes from the locale, as in the app ---------- */
+const CURRENCIES = {
+  INR: { symbol: '₹', locale: 'en-IN', salary: 1200000, decimals: 0 },
+  USD: { symbol: '$', locale: 'en-US', salary: 65000, decimals: 2 },
+  EUR: { symbol: '€', locale: 'de-DE', salary: 48000, decimals: 2 },
+};
+
+const EXAMPLES = {
+  INR: [
+    { name: 'Coffee', price: 350 },
+    { name: 'Sneakers', price: 8000 },
+    { name: 'Phone', price: 80000 },
+    { name: 'Car', price: 1200000 },
+  ],
+  USD: [
+    { name: 'Coffee', price: 5 },
+    { name: 'Sneakers', price: 120 },
+    { name: 'Phone', price: 999 },
+    { name: 'Car', price: 30000 },
+  ],
+  EUR: [
+    { name: 'Coffee', price: 4 },
+    { name: 'Sneakers', price: 110 },
+    { name: 'Phone', price: 950 },
+    { name: 'Car', price: 28000 },
+  ],
+};
+
+/* The working week the demo assumes: 8 hours, 5 days, 52 weeks */
+const HOURS_PER_DAY = 8;
+const HOURS_PER_WEEK = 40;
+const HOURS_PER_MONTH = 2080 / 12;
+const HOURS_PER_YEAR = 2080;
+
+const priceInput = document.getElementById('price');
+const salaryInput = document.getElementById('salary');
+const currencySelect = document.getElementById('currency');
+const chipsHost = document.getElementById('chips');
+const answerMain = document.getElementById('answer-main');
+const answerSuffix = document.getElementById('answer-suffix');
+
+let currency = CURRENCIES.INR;
+let salaryTouched = false;
+
+function decimalSeparatorFor(locale) {
+  // A full stop is the separator whatever the locale, unless the locale
+  // groups with a full stop, in which case the comma has to do it.
+  const grouped = new Intl.NumberFormat(locale).format(100000);
+  return grouped.includes('.') ? ',' : '.';
+}
+
+function parseAmount(text) {
+  const separator = decimalSeparatorFor(currency.locale);
+  let digits = '';
+  let fraction = null;
+
+  for (const character of text) {
+    if (character >= '0' && character <= '9') {
+      if (fraction === null) {
+        digits += character;
+      } else if (fraction.length < currency.decimals) {
+        fraction += character;
+      }
+    } else if (character === separator && fraction === null && currency.decimals > 0) {
+      fraction = '';
+    }
+  }
+
+  if (digits === '' && fraction === null) return null;
+
+  return {
+    value: Number(digits || '0') + Number(`0.${fraction || '0'}`),
+    fraction,
+  };
+}
+
+function formatAmount(parsed) {
+  if (parsed === null) return '';
+
+  const separator = decimalSeparatorFor(currency.locale);
+  const grouped = new Intl.NumberFormat(currency.locale, {
+    maximumFractionDigits: 0,
+  }).format(Math.floor(parsed.value));
+
+  if (parsed.fraction === null) return grouped;
+  return `${grouped}${separator}${parsed.fraction}`;
+}
+
+function regroup(input) {
+  const before = input.value;
+  const caretDigits = countDigits(before.slice(0, input.selectionStart ?? before.length));
+  const parsed = parseAmount(before);
+  const after = formatAmount(parsed);
+
+  input.value = after;
+  input.setSelectionRange(...caretRange(after, caretDigits));
+
+  return parsed?.value ?? null;
+}
+
+function countDigits(text) {
+  return (text.match(/\d/g) ?? []).length;
+}
+
+function caretRange(text, digitCount) {
+  let seen = 0;
+
+  for (let i = 0; i < text.length; i++) {
+    if (/\d/.test(text[i])) seen += 1;
+    if (seen >= digitCount && digitCount > 0) return [i + 1, i + 1];
+  }
+
+  return digitCount === 0 ? [0, 0] : [text.length, text.length];
+}
+
+/* ---------- Work time, mirroring lib/domain/work_time.dart ---------- */
+function coarsest(hours) {
+  if (hours < 1 / 60) return { unit: 'second', amount: hours * 3600 };
+  if (hours < 1) return { unit: 'minute', amount: hours * 60 };
+  if (hours < HOURS_PER_DAY) return { unit: 'hour', amount: hours };
+  if (hours < HOURS_PER_WEEK) return { unit: 'day', amount: hours / HOURS_PER_DAY };
+  if (hours < HOURS_PER_MONTH) return { unit: 'week', amount: hours / HOURS_PER_WEEK };
+  if (hours < HOURS_PER_YEAR) return { unit: 'month', amount: hours / HOURS_PER_MONTH };
+  return { unit: 'year', amount: hours / HOURS_PER_YEAR };
+}
+
+function amountLabel(amount) {
+  if (amount >= 10) return String(Math.round(amount));
+
+  const oneDecimal = amount.toFixed(1);
+  return oneDecimal.endsWith('.0') ? oneDecimal.slice(0, -2) : oneDecimal;
+}
+
+function workTimeLabel(hours) {
+  const shown = coarsest(hours);
+  const amount = amountLabel(shown.amount);
+  const unit = amount === '1' ? shown.unit : `${shown.unit}s`;
+
+  return `${amount} ${unit}`;
+}
+
+/* ---------- The answer ---------- */
+function updateAnswer() {
+  const price = parseAmount(priceInput.value)?.value ?? 0;
+  const salary = parseAmount(salaryInput.value)?.value ?? 0;
+
+  if (price <= 0 || salary <= 0) {
+    answerMain.className = 'answer-idle';
+    answerMain.style.fontSize = '';
+    answerMain.textContent = salary <= 0
+      ? 'Add what you earn and the answer appears.'
+      : 'Type a price and the answer appears.';
+    answerSuffix.textContent = '';
+    return;
+  }
+
+  const hourlyRate = salary / HOURS_PER_YEAR;
+  const label = workTimeLabel(price / hourlyRate);
+
+  answerMain.className = 'answer';
+  answerMain.style.fontSize = label.length <= 9 ? '3.3rem' : label.length <= 12 ? '2.9rem' : '2.4rem';
+  answerMain.textContent = label;
+  answerSuffix.textContent = 'of your working life';
+
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    answerMain.classList.remove('pop');
+    void answerMain.offsetWidth;
+    answerMain.classList.add('pop');
+  }
+}
+
+function clearActiveChip() {
+  chipsHost.querySelectorAll('.chip.active').forEach((chip) => chip.classList.remove('active'));
+}
+
+function buildChips() {
+  chipsHost.replaceChildren();
+
+  for (const example of EXAMPLES[currencySelect.value]) {
+    const chip = document.createElement('button');
+    chip.type = 'button';
+    chip.className = 'chip';
+    chip.textContent = example.name;
+    chip.addEventListener('click', () => {
+      clearActiveChip();
+      chip.classList.add('active');
+      priceInput.value = formatAmount({ value: example.price, fraction: null });
+      updateAnswer();
+    });
+    chipsHost.append(chip);
+  }
+}
+
+function setCurrency(code) {
+  currency = CURRENCIES[code];
+  document.getElementById('price-sym').textContent = currency.symbol;
+  document.getElementById('salary-sym').textContent = currency.symbol;
+
+  if (!salaryTouched) {
+    salaryInput.value = formatAmount({ value: currency.salary, fraction: null });
+  }
+
+  buildChips();
+
+  // Keep the shown example honest in the new currency
+  priceInput.value = '';
+  const first = chipsHost.querySelector('.chip:nth-child(3)');
+  if (first) first.click();
+}
+
+priceInput.addEventListener('input', () => {
+  clearActiveChip();
+  regroup(priceInput);
+  updateAnswer();
+});
+salaryInput.addEventListener('input', () => {
+  salaryTouched = true;
+  regroup(salaryInput);
+  updateAnswer();
+});
+currencySelect.addEventListener('change', () => setCurrency(currencySelect.value));
+
+setCurrency('INR');
+
+/* ---------- The carousel: the centre shot leads, neighbours step back ---------- */
+const gallery = document.getElementById('gallery');
+const shots = [...gallery.querySelectorAll('.shot')];
+const arrowPrev = document.getElementById('car-prev');
+const arrowNext = document.getElementById('car-next');
+
+function carouselStride() {
+  return shots.length > 1
+    ? shots[1].offsetLeft - shots[0].offsetLeft
+    : shots[0].offsetWidth;
+}
+
+function paintCarousel() {
+  const centre = gallery.scrollLeft + gallery.clientWidth / 2;
+
+  for (const shot of shots) {
+    const shotCentre = shot.offsetLeft + shot.offsetWidth / 2;
+    const distance = Math.min(Math.abs(centre - shotCentre) / carouselStride(), 1);
+
+    shot.style.transform = `scale(${1 - 0.1 * distance})`;
+    shot.style.opacity = String(1 - 0.4 * distance);
+    shot.querySelector('figcaption').style.opacity = String(Math.max(1 - distance * 1.15, 0));
+  }
+
+  arrowPrev.disabled = gallery.scrollLeft <= 2;
+  arrowNext.disabled = gallery.scrollLeft >= gallery.scrollWidth - gallery.clientWidth - 2;
+}
+
+function stepCarousel(direction) {
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  gallery.scrollBy({
+    left: direction * carouselStride(),
+    behavior: reduced ? 'auto' : 'smooth',
+  });
+}
+
+function centreCarouselOn(shot) {
+  gallery.scrollLeft = shot.offsetLeft + shot.offsetWidth / 2 - gallery.clientWidth / 2;
+}
+
+gallery.addEventListener('scroll', () => requestAnimationFrame(paintCarousel), { passive: true });
+addEventListener('resize', paintCarousel);
+arrowPrev.addEventListener('click', () => stepCarousel(-1));
+arrowNext.addEventListener('click', () => stepCarousel(1));
+
+// Opens on the middle shot, so the horizon is full on both sides
+centreCarouselOn(shots[Math.floor(shots.length / 2)]);
+paintCarousel();
+
+/* ---------- Reveals ---------- */
+const revealObserver = new IntersectionObserver(
+  (entries) => {
+    for (const entry of entries) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in');
+        revealObserver.unobserve(entry.target);
+      }
+    }
+  },
+  { threshold: 0.15 },
+);
+document.querySelectorAll('[data-reveal]').forEach((el) => revealObserver.observe(el));
+
+/* ---------- The savings figure counts up when it arrives ---------- */
+const keptTarget = 284500;
+const keptElement = document.getElementById('kept');
+const indianGrouping = new Intl.NumberFormat('en-IN');
+
+function showKept(value) {
+  keptElement.textContent = indianGrouping.format(Math.round(value));
+}
+
+const savingsObserver = new IntersectionObserver(
+  (entries) => {
+    if (!entries.some((entry) => entry.isIntersecting)) return;
+    savingsObserver.disconnect();
+
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      showKept(keptTarget);
+      return;
+    }
+
+    const start = performance.now();
+    const duration = 1400;
+
+    function tick(now) {
+      const t = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - t, 3);
+      showKept(keptTarget * eased);
+      if (t < 1) requestAnimationFrame(tick);
+    }
+
+    requestAnimationFrame(tick);
+  },
+  { threshold: 0.4 },
+);
+savingsObserver.observe(document.getElementById('savings'));
+</script>
+</body>
+</html>

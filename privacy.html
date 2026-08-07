@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacy policy, Worthwhile</title>
+<meta name="description" content="Worthwhile runs on your phone. There is no server of ours anywhere. This page says exactly what that means.">
+<meta name="theme-color" content="#0E0E10">
+<link rel="canonical" href="https://ecstra.github.io/worthwhile-app/privacy">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23BCF25C'/%3E%3Cpath d='M22 14h20c1.6 0 3 1.4 3 3 0 7.6-4.4 11.9-8.1 15l-.1.1.1.1c3.7 3.1 8.1 7.4 8.1 15 0 1.6-1.4 3-3 3H22c-1.6 0-3-1.4-3-3 0-7.6 4.4-11.9 8.1-15l.1-.1-.1-.1C23.4 28.9 19 24.6 19 17c0-1.6 1.4-3 3-3Z' fill='%231B2600'/%3E%3C/svg%3E">
+<style>
+@font-face {
+  font-family: 'GoogleSansFlex';
+  src: url('assets/fonts/GoogleSansFlex-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'GoogleSansFlex';
+  src: url('assets/fonts/GoogleSansFlex-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-display: swap;
+}
+
+:root {
+  --surface: #0E0E10;
+  --on-surface: #E9E9EE;
+  --on-surface-variant: #A8A8B0;
+  --surface-container-low: #161619;
+  --outline: #57575F;
+  --outline-variant: #2B2B31;
+  --primary: #BCF25C;
+  --effects: cubic-bezier(0.34, 0.80, 0.34, 1.00);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  color-scheme: dark;
+  scrollbar-width: none;
+}
+::-webkit-scrollbar { width: 0; height: 0; background: transparent; }
+
+body {
+  background: var(--surface);
+  color: var(--on-surface);
+  font-family: 'GoogleSansFlex', system-ui, sans-serif;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 28px 0;
+}
+.lockup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 500;
+  font-size: 1.15rem;
+  color: var(--on-surface);
+  text-decoration: none;
+}
+.lockup svg { width: 34px; height: 34px; }
+header .back {
+  color: var(--on-surface-variant);
+  font-size: 0.9rem;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 200ms var(--effects);
+}
+header .back:hover { color: var(--on-surface); }
+
+main { padding: 40px 0 32px; }
+
+h1 {
+  font-size: clamp(2.2rem, 5vw, 3rem);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+}
+.meta {
+  margin-top: 14px;
+  color: var(--on-surface-variant);
+  font-size: 0.95rem;
+}
+
+h2 {
+  font-size: 1.45rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  margin: 48px 0 14px;
+}
+h3 {
+  font-size: 1.05rem;
+  font-weight: 500;
+  margin: 28px 0 10px;
+}
+p { margin: 12px 0; color: var(--on-surface); }
+p.quiet, li { color: var(--on-surface-variant); }
+
+ul {
+  list-style: none;
+  margin: 12px 0;
+}
+li {
+  padding: 8px 0 8px 26px;
+  position: relative;
+  border-bottom: 1px solid var(--outline-variant);
+}
+li:last-child { border-bottom: none; }
+li::before {
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: 17px;
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--primary);
+}
+
+.callout {
+  background: var(--surface-container-low);
+  border-radius: 16px;
+  padding: 18px 20px;
+  margin: 18px 0;
+}
+.callout p { margin: 0; color: var(--on-surface); }
+
+a {
+  color: var(--primary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+footer {
+  padding: 40px 0 56px;
+  color: var(--on-surface-variant);
+  font-size: 0.85rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  border-top: 1px solid var(--outline-variant);
+  margin-top: 32px;
+}
+footer a { color: var(--on-surface-variant); }
+footer a:hover { color: var(--on-surface); }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <a class="lockup" href="./">
+      <svg viewBox="0 0 96 96" aria-hidden="true"><path class="js-scallop" fill="#BCF25C"></path><path d="M38 26h20c1.7 0 3 1.3 3 3 0 7.9-4.6 12.4-8.4 15.6l-.2.2.2.2C56.4 48.2 61 52.7 61 60.6c0 1.7-1.3 3-3 3H38c-1.7 0-3-1.3-3-3 0-7.9 4.6-12.4 8.4-15.6l.2-.2-.2-.2C39.6 41.4 35 36.9 35 29c0-1.7 1.3-3 3-3Z" fill="#1B2600" transform="translate(1.5 3.2)"/></svg>
+      Worthwhile
+    </a>
+    <a class="back" href="./">Back to the app</a>
+  </header>
+
+  <main>
+    <h1>Privacy policy</h1>
+    <p class="meta">Worthwhile, package com.ecstra.worthwhile.<br>Last updated 7 August 2026.</p>
+
+    <h2>The short version</h2>
+    <p>Worthwhile runs on your phone. There is no server of ours anywhere, and there never has been. What you type stays on your device, and the only copy that ever leaves it is a backup you switch on yourself, which goes into your own Google Drive where nothing but this app can read it.</p>
+    <p>No adverts. No analytics. Nothing sold to anybody.</p>
+
+    <h2>What Worthwhile collects</h2>
+
+    <h3>From your Google account</h3>
+    <p class="quiet">Signing in with Google is required to use the app. Google gives Worthwhile three things.</p>
+    <ul>
+      <li>Your name, which is used to greet you on the home screen</li>
+      <li>Your email address, which comes with the basic profile whether an app shows it or not. Worthwhile does not display it and does not send it anywhere</li>
+      <li>Your profile picture, which is fetched once and stored on your device so it draws without a connection</li>
+    </ul>
+    <p>All three are held on your phone. None of them is transmitted to us, because there is no us to transmit them to.</p>
+
+    <h3>What you type</h3>
+    <ul>
+      <li>What you earn. Optionally also your pay after tax, what work costs you, your living costs, and the hours the job takes without paying for them</li>
+      <li>The things you are considering buying. A name, a price, the date you added it, how long you chose to wait, and what you decided in the end</li>
+    </ul>
+    <p>All of it is written to your device&rsquo;s private storage, which no other app can read.</p>
+    <div class="callout">
+      <p><strong>About your pay.</strong> Google classifies income as sensitive personal information, and it is treated that way here. It is used only to work out what an hour of your time is worth, it is never transmitted to us, and it leaves your device only if you switch backup on, and then only into your own Drive.</p>
+    </div>
+
+    <h2>What Worthwhile does not collect</h2>
+    <ul>
+      <li>No analytics of any kind. No usage tracking, no event logging, no crash reporting</li>
+      <li>No advertising identifier, and no adverts anywhere in the app</li>
+      <li>No location, contacts, camera, microphone, call logs, or files outside the app&rsquo;s own storage</li>
+      <li>Nothing about you is sold, shared, or sent to a data broker, an advertiser, or anyone else</li>
+    </ul>
+
+    <h2>Where your data goes</h2>
+
+    <h3>Your device</h3>
+    <p>By default, everywhere. The list of what you are waiting on, your decisions, your pay and your settings all live in the app&rsquo;s private storage and go nowhere else.</p>
+
+    <h3>Your own Google Drive, if you turn backup on</h3>
+    <p>Backup is part of Worthwhile Pro, it is off until you switch it on, and switching it on is what asks Google for permission to use Drive.</p>
+    <p class="quiet">When it is on, Worthwhile writes one file into the app data folder of your Drive. That folder is a private space Google gives an app for its own data, and three things are true of it.</p>
+    <ul>
+      <li>It is hidden from the Drive website and app, and from Drive search</li>
+      <li>No other app can read it, and no website can reach it</li>
+      <li>It belongs to you and counts against your own Drive storage</li>
+    </ul>
+    <p>The file holds your items, your decisions and your pay settings, so a new phone can pick up where the old one left off. Your licence is deliberately not in it, because Google Play is the authority on what you have bought and a file you could edit must not be able to grant a paid feature.</p>
+    <p>Android&rsquo;s own Auto Backup may also copy the app&rsquo;s data into a private area of your Drive. That is a system feature, it is on by default for every Android app, and it can be turned off in your device&rsquo;s backup settings.</p>
+
+    <h3>Google Play, when you buy Pro</h3>
+    <p>The purchase is handled entirely by Google Play. Worthwhile never sees your card, your billing address, or any payment detail. Play tells the app only whether the purchase exists, and the licence is tied to your Google Play account rather than to the account you signed in with.</p>
+
+    <h2>Who else is involved</h2>
+    <p>Google, and nobody else.</p>
+    <ul>
+      <li>Google Sign In, to authenticate you</li>
+      <li>Google Drive, to hold the backup you asked for, in your own account</li>
+      <li>Google Play Billing, to sell and restore Worthwhile Pro</li>
+    </ul>
+    <p>Their handling of that data is covered by the <a href="https://policies.google.com/privacy">Google Privacy Policy</a>.</p>
+    <p>There is no other third party. No analytics provider, no advertising network, no crash reporter, no customer support platform, no data broker.</p>
+
+    <h2>Deleting your data</h2>
+    <ul>
+      <li>Everything on the phone goes when you uninstall the app</li>
+      <li>The Drive backup is removed at Google Drive settings, under Manage apps, by choosing Delete hidden app data for Worthwhile</li>
+      <li>Worthwhile&rsquo;s access to your account is revoked at your Google account permissions, which cuts off both sign in and Drive</li>
+    </ul>
+    <p>You do not need to ask us to do any of this, and there is nothing on our side to delete.</p>
+
+    <h2>Notifications</h2>
+    <p>Cooldown reminders are scheduled by the app on your own device using Android&rsquo;s alarm system. Nothing is pushed from a server, and no notification service is involved.</p>
+
+    <h2>Children</h2>
+    <p>Worthwhile is not directed at children under 13 and is not designed for them. It does not knowingly collect anything from them.</p>
+
+    <h2>Changes</h2>
+    <p>Any change to this policy is posted on this page with a new date at the top. If a change ever affects what leaves your device, the app will say so before it takes effect.</p>
+
+    <h2>Contact</h2>
+    <p>Questions about this policy, or about your data, go to <a href="mailto:hello.worthwhile@gmail.com">hello.worthwhile@gmail.com</a>.</p>
+  </main>
+
+  <footer>
+    <span>Worthwhile</span>
+    <a href="./">Back to the app</a>
+  </footer>
+</div>
+
+<script>
+'use strict';
+
+function scallopPath(cx, cy, r, lobes, amplitude) {
+  const points = [];
+  const steps = 720;
+
+  for (let i = 0; i <= steps; i++) {
+    const theta = (i / steps) * Math.PI * 2;
+    const radius = r * (1 + amplitude * Math.cos(lobes * theta));
+    const x = cx + radius * Math.cos(theta);
+    const y = cy + radius * Math.sin(theta);
+    points.push(`${x.toFixed(2)} ${y.toFixed(2)}`);
+  }
+
+  return `M${points.join('L')}Z`;
+}
+
+document.querySelectorAll('.js-scallop').forEach((path) => {
+  path.setAttribute('d', scallopPath(48, 48, 42, 8, 0.07));
+});
+</script>
+</body>
+</html>
