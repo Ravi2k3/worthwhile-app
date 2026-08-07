@@ -727,7 +727,7 @@ footer a:hover { color: var(--on-surface); }
 
       <p class="field-label">Its price</p>
       <div class="field">
-        <span class="sym" id="price-sym">₹</span>
+        <span class="sym" id="price-sym">$</span>
         <input id="price" inputmode="decimal" autocomplete="off" spellcheck="false" placeholder="Type a price" aria-label="Price">
         <select id="currency" aria-label="Currency">
           <option value="INR">INR</option>
@@ -738,7 +738,7 @@ footer a:hover { color: var(--on-surface); }
 
       <p class="field-label">What you earn a year</p>
       <div class="field">
-        <span class="sym" id="salary-sym">₹</span>
+        <span class="sym" id="salary-sym">$</span>
         <input id="salary" inputmode="decimal" autocomplete="off" spellcheck="false" aria-label="Yearly income">
       </div>
 
@@ -793,7 +793,7 @@ footer a:hover { color: var(--on-surface); }
     <div class="savings" data-reveal id="savings">
       <div>
         <p class="caption">Money not spent</p>
-        <p class="figure"><span class="sym">₹</span><span id="kept">0</span></p>
+        <p class="figure"><span class="sym">$</span><span id="kept">0</span></p>
         <p class="line">The only number in the app that grows while you do nothing. It is always right, and changing your mind about an old decision moves it straight away.</p>
       </div>
       <div class="stats">
@@ -847,7 +847,7 @@ footer a:hover { color: var(--on-surface); }
     <div class="plans">
       <div class="plan free" data-reveal>
         <p class="name">Free</p>
-        <p class="price">₹0</p>
+        <p class="price">$0</p>
         <ul>
           <li>Unlimited price checks, using your yearly pay</li>
           <li>Two waits at a time, ten wants on the list</li>
@@ -857,7 +857,7 @@ footer a:hover { color: var(--on-surface); }
       </div>
       <div class="plan pro" data-reveal style="--d: 80ms">
         <p class="name">Pro <span class="tag">Once, forever</span></p>
-        <p class="price"><span class="sym">₹</span>349 <span class="per">one payment</span></p>
+        <p class="price"><span class="sym">$</span>7.99 <span class="per">one payment</span></p>
         <ul>
           <li>Your real hourly rate, after tax, what work costs you and the hours it takes without paying you</li>
           <li>Prices measured against what is actually left after rent and bills</li>
@@ -1180,12 +1180,12 @@ const revealObserver = new IntersectionObserver(
 document.querySelectorAll('[data-reveal]').forEach((el) => revealObserver.observe(el));
 
 /* ---------- The savings figure counts up when it arrives ---------- */
-const keptTarget = 284500;
+const keptTarget = 15400;
 const keptElement = document.getElementById('kept');
-const indianGrouping = new Intl.NumberFormat('en-IN');
+const grouping = new Intl.NumberFormat('en-US');
 
 function showKept(value) {
-  keptElement.textContent = indianGrouping.format(Math.round(value));
+  keptElement.textContent = grouping.format(Math.round(value));
 }
 
 const savingsObserver = new IntersectionObserver(
