@@ -96,6 +96,9 @@ body {
 }
 
 ::selection { background: var(--primary); color: var(--on-primary); }
+/* On the lime card the lime highlight is invisible, so it inverts:
+   the dark ink becomes the highlight and the type flips to lime */
+.savings ::selection { background: var(--on-primary); color: var(--primary); }
 
 img { max-width: 100%; display: block; }
 
@@ -854,7 +857,7 @@ footer a:hover { color: var(--on-surface); }
     <div class="plans">
       <div class="plan free" data-reveal>
         <p class="name">Free</p>
-        <p class="price">$0</p>
+        <p class="price"><span class="sym">$</span>0</p>
         <ul>
           <li>Unlimited price checks, using your yearly pay</li>
           <li>Two waits at a time, ten wants on the list</li>
