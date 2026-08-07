@@ -243,7 +243,9 @@ h1 .lime { color: var(--primary); }
   align-items: center;
   background: var(--surface-container);
   border-radius: var(--r-tile);
-  padding: 4px 6px 4px 16px;
+  /* Even on both sides. The chevron sits at the select's own right edge, so
+     this padding is the whole of the inset the eye sees on that side */
+  padding: 4px 16px;
   margin-bottom: 18px;
   border: 1px solid transparent;
   transition: border-color 200ms var(--effects);
@@ -729,7 +731,7 @@ footer a:hover { color: var(--on-surface); }
         <input id="price" inputmode="decimal" autocomplete="off" spellcheck="false" placeholder="Type a price" aria-label="Price">
         <select id="currency" aria-label="Currency">
           <option value="INR">INR</option>
-          <option value="USD">USD</option>
+          <option value="USD" selected>USD</option>
           <option value="EUR">EUR</option>
         </select>
       </div>
@@ -890,11 +892,6 @@ footer a:hover { color: var(--on-surface); }
 'use strict';
 
 /* ---------- Currencies. Grouping comes from the locale, as in the app ---------- */
-const EURO_REGIONS = new Set([
-  'AT', 'BE', 'CY', 'DE', 'EE', 'ES', 'FI', 'FR', 'GR', 'HR',
-  'IE', 'IT', 'LT', 'LU', 'LV', 'MT', 'NL', 'PT', 'SI', 'SK',
-]);
-
 const CURRENCIES = {
   INR: { symbol: '₹', locale: 'en-IN', salary: 1200000, decimals: 0 },
   USD: { symbol: '$', locale: 'en-US', salary: 65000, decimals: 2 },
@@ -1117,23 +1114,7 @@ salaryInput.addEventListener('input', () => {
 });
 currencySelect.addEventListener('change', () => setCurrency(currencySelect.value));
 
-/* Whichever of the three the visitor's own region uses, and the dollar for
-   everybody else, since most of the web is neither Indian nor European */
-function currencyForRegion() {
-  const locales = navigator.languages?.length ? navigator.languages : [navigator.language ?? 'en-US'];
-
-  for (const locale of locales) {
-    const region = new Intl.Locale(locale).maximize().region;
-
-    if (region === 'IN') return 'INR';
-    if (EURO_REGIONS.has(region)) return 'EUR';
-    if (region) return 'USD';
-  }
-
-  return 'USD';
-}
-
-setCurrency(currencyForRegion());
+setCurrency('USD');
 
 /* ---------- The carousel: the centre shot leads, neighbours step back ---------- */
 const gallery = document.getElementById('gallery');
